@@ -10,6 +10,12 @@
 
         public string Message { get; set; }
 
+        public static OperationResult<T> Succeeded() => new()
+        {
+            Success = true,
+            PayLoad = default,
+        };
+
         public static OperationResult<T> Succeeded(T payLoad) => new()
         {
             Success = true,
@@ -30,7 +36,7 @@
     }
     public class Error(string code, string description)
     {
-        private string Code { get; set; } = code;
-        private string Description { get; set; } = description;
+        public string Code { get; set; } = code;
+        public string Description { get; set; } = description;
     }
 }

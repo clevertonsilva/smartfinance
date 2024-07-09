@@ -12,6 +12,25 @@ namespace smartfinance.Infra.Data.Data.Configuration
              builder.Property(p => p.Name)
                 .HasMaxLength(450)
                 .IsRequired();
+
+            builder.Property(p => p.LastName)
+                .HasMaxLength(450)
+                .IsRequired();
+
+            builder.Property(p => p.Email)
+               .HasMaxLength(350)
+               .IsRequired();
+
+            builder.Property(p => p.CellPhone)
+               .HasMaxLength(20);
+
+            builder.Property(p => p.IsDeleted)
+               .HasDefaultValue(false)
+               .IsRequired();
+
+            builder.Property(p => p.IsActive)
+               .HasDefaultValue(false)
+               .IsRequired();
         }
     }
 }

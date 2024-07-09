@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using smartfinance.Domain.Entities;
 using smartfinance.Domain.Entities.Shared;
 using smartfinance.Domain.Interfaces.Services.Authentication;
 using smartfinance.Domain.Interfaces.Utils;
@@ -13,6 +14,24 @@ namespace smartfinance.Infra.Data.Data
             : base(options)
         {
             _currentUserService = currentUserService;
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            var typesToRegister = AppDomain
+                                  .CurrentDomain
+                                  .GetAssemblies()
+                                  .SelectMany(x => x.GetTypes())
+                                  .Where(x => typeof(IEntityTypeConfiguration<>)
+                                  .IsAssignableFrom(x) && !x.IsAbstract);
+
+            foreach (var type in typesToRegister)
+            {
+                dynamic configurationInstance = Activator.CreateInstance(type);
+                modelBuilder.ApplyConfiguration(configurationInstance);
+            }
         }
 
         public async Task<bool> Commit(CancellationToken cancellationToken = default)
@@ -43,5 +62,7 @@ namespace smartfinance.Infra.Data.Data
                 }
             }
         }
+
+        public DbSet<Account> Accounts { get; set; }
     }
 }

@@ -1,6 +1,6 @@
-﻿namespace smartfinance.Domain.Models.Authentication
+﻿namespace smartfinance.Domain.Models.Authentication.Model
 {
-    public class IdentityUserViewModel
+    public class TokenViewModel
     {
         public string AccessToken { get; set; }
         public string RefreshToken { get; set; }
