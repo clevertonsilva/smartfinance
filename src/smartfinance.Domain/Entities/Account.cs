@@ -10,5 +10,7 @@ namespace smartfinance.Domain.Entities
         public string CellPhone { get; set; }
         public bool IsDeleted { get; set; } = false;
         public bool IsActive { get; set; } = false;
+
+        AccountMovement Account_Movement = new AccountMovement();
     }
 }
