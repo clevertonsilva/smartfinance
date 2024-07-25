@@ -6,7 +6,7 @@ namespace smartfinance.Api
     {
         public static void AddApi(this IServiceCollection services)
         {
-            services.AddTransient<ErrorHandlingMiddleware>();
+            //services.AddTransient<GlobalExceptionHandler>();
         }
     }
 }

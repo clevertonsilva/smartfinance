@@ -10,5 +10,7 @@ namespace smartfinance.Infra.Identity.Data
             : base(options)
         {
         }
+
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
     }
 }

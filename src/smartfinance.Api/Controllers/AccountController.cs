@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using smartfinance.Application.Interfaces;
 using smartfinance.Domain.Common;
+using smartfinance.Domain.Interfaces.Services.Authentication;
 using smartfinance.Domain.Models.Account.Create;
 using smartfinance.Domain.Models.Account.Model;
 using smartfinance.Domain.Models.Authentication.Model;
@@ -16,10 +16,12 @@ namespace smartfinance.Api.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAccountApp _accountApp;
+        private readonly IIdentityUserService _identityUserService;
 
-        public AccountController(IAccountApp accountApp)
+        public AccountController(IAccountApp accountApp, IIdentityUserService identityUserService)
         {
             _accountApp = accountApp;
+            _identityUserService = identityUserService;
         }
 
         [HttpGet("{id}")]
@@ -38,15 +40,11 @@ namespace smartfinance.Api.Controllers
 
         [HttpPost("create")]
         [ProducesResponseType(typeof(OperationResult<int>), StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(OperationResult<int>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(OperationResult<int>), StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(typeof(OperationResult<int>), StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<OperationResult<int>>> CreateAccount([Required] AccountCreateViewModel model, CancellationToken cancellationToken = default)
         {
-            //var identity = HttpContext.GetRequestIdentity();
-
-
             var result = await _accountApp.CreateAsync(model, cancellationToken);
 
             if (!result.Success)
@@ -55,57 +53,55 @@ namespace smartfinance.Api.Controllers
             return CreatedAtAction(nameof(FindByIdAsync), new { id = result.PayLoad }, result.PayLoad);
         }
 
-        //[ProducesResponseType(typeof(UsuarioCadastroResponse), StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        //[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(OperationResult<IdentityUserViewModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         [HttpPost("login")]
         public async Task<ActionResult<IdentityUserViewModel>> Login(LoginViewModel model)
         {
-            if (!ModelState.IsValid)
-                return BadRequest();
+            var result = await _identityUserService.Login(model);
+            
+            if (!result.Success)
+                return Unauthorized(result);
 
-            //var resultado = await _identityService.Login(usuarioLogin);
-            //if (resultado.Sucesso)
-            //    return Ok(resultado);
-
-            return Unauthorized();
+            return Ok(result);
         }
 
-        //[ProducesResponseType(typeof(UsuarioCadastroResponse), StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        //[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(OperationResult<IdentityUserViewModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         [Authorize]
         [HttpPost("refresh-login")]
-        public async Task<ActionResult<IdentityUserViewModel>> RefreshLogin()
+        public async Task<ActionResult<IdentityUserViewModel>> RefreshToken()
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
-            var usuarioId = identity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (usuarioId == null)
+            var userId = identity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            
+            if (userId == null)
                 return BadRequest();
 
-            //var resultado = await _identityService.LoginSemSenha(usuarioId);
-            //if (resultado.Sucesso)
-            //    return Ok(resultado);
+            var result = await _identityUserService.LoginWithouPassword(userId);
 
-            return Unauthorized();
+            if (result == null)
+                return Unauthorized();
+
+            return Ok(result);
         }
 
-        [Authorize]
+        [ProducesResponseType(typeof(OperationResult<IdentityUserViewModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         [HttpPost("confirm-email")]
-        public async Task<ActionResult<IdentityUserViewModel>> ConfirmEmail(ConfirmEmailViewModel model)
+        public async Task<ActionResult<bool>> ConfirmEmail(ConfirmEmailViewModel model)
         {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            var usuarioId = identity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (usuarioId == null)
-                return BadRequest();
+            var confirmResult = await _identityUserService.ConfirmEmail(model);
 
-            //var resultado = await _identityService.LoginSemSenha(usuarioId);
-            //if (resultado.Sucesso)
-            //    return Ok(resultado);
+            if (!confirmResult.Success)
+                return BadRequest(confirmResult);
 
-            return Unauthorized();
+            return Ok(confirmResult);
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace smartfinance.Domain.Common
+﻿using smartfinance.Domain.Models.Authentication.Model;
+
+namespace smartfinance.Domain.Common
 {
     public class OperationResult<T>
     {

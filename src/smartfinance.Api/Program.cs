@@ -22,6 +22,8 @@ builder.Services.AddApplication();
 builder.Services.AddDomain();
 builder.Services.AddInfraIdentity(builder.Configuration);
 builder.Services.AddInfraData(builder.Configuration);
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 
@@ -36,6 +38,8 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseMiddleware(typeof(ErrorHandlingMiddleware));
+app.UseExceptionHandler();
+
+//app.UseMiddleware(typeof(GlobalExceptionHandler));
 
 app.Run();

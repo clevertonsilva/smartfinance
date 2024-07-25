@@ -32,10 +32,10 @@ namespace smartfinance.Infra.Identity.Services
 
             if (user == null)
             {
-                return OperationResult<bool>.Failed("Não foi possível confirmar o email de cadastro.");
+                return OperationResult<bool>.Failed("Usuário não encontrado.");
             }
 
-            var result = await _userManager.ConfirmEmailAsync(user, model.Code);
+            var result = await _userManager.ConfirmEmailAsync(user, model.Token);
 
             if (!result.Succeeded)
             {
@@ -74,9 +74,22 @@ namespace smartfinance.Infra.Identity.Services
             return OperationResult<IdentityUserViewModel>.Failed(message);
         }
 
-        public Task<OperationResult<bool>> Refresh(TokenViewModel model)
+        public async Task<OperationResult<IdentityUserViewModel>> LoginWithouPassword(string userId)
         {
-            throw new NotImplementedException();
+            var user = await _userManager.FindByIdAsync(userId);
+
+            string message = string.Empty;
+
+            if (await _userManager.IsLockedOutAsync(user))
+                message ="Essa conta está bloqueada";
+            else if (!await _userManager.IsEmailConfirmedAsync(user))
+                message = "Essa conta precisa confirmar seu e-mail antes de realizar o login";
+            
+            if (!string.IsNullOrWhiteSpace(message))
+                return OperationResult<IdentityUserViewModel>.Failed(message);
+
+            return await GenerateCredentials(user.Email);
+
         }
 
         public async Task<OperationResult<bool>> Register(CreateIdentityUserViewModel model)

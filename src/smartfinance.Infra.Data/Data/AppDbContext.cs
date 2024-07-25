@@ -64,5 +64,9 @@ namespace smartfinance.Infra.Data.Data
         }
 
         public DbSet<Account> Accounts { get; set; }
+        public DbSet<Movement> Movements { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<TransactionType> TransactionTypes { get; set; }
+
     }
 }

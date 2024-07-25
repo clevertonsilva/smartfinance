@@ -8,7 +8,8 @@ namespace smartfinance.Domain.Interfaces.Services.Authentication
     {
         Task<OperationResult<bool>> Register(CreateIdentityUserViewModel model);
         Task<OperationResult<IdentityUserViewModel>> Login(LoginViewModel model);
-        Task<OperationResult<bool>> Refresh(TokenViewModel model);
         Task<OperationResult<bool>> ConfirmEmail(ConfirmEmailViewModel model);
+        Task<OperationResult<IdentityUserViewModel>> LoginWithouPassword(string userId);
+
     }
 }

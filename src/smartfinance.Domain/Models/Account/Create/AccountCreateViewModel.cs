@@ -5,5 +5,6 @@ namespace smartfinance.Domain.Models.Account.Create
     public class AccountCreateViewModel : CreateIdentityUserViewModel
     {
         public string LastName { get; set; }
+        public string CellPhone { get; set; }
     }
 }

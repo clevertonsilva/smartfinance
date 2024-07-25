@@ -10,6 +10,7 @@ using smartfinance.Domain.Models.Account.Create;
 using smartfinance.Domain.Models.Account.Model;
 using smartfinance.Domain.Models.Account.Update;
 using smartfinance.Domain.Models.Authentication.Create;
+using smartfinance.Domain.Models.Authentication.Model;
 
 namespace smartfinance.Application.Apps
 {
@@ -33,7 +34,7 @@ namespace smartfinance.Application.Apps
             _identityUserService = identityUserService;
         }
 
-        public async Task<OperationResult<bool>> ActiveAsync(int id, CancellationToken cancellationToken)
+        public async Task<OperationResult<bool>> ActiveAsync(int id, CancellationToken cancellationToken = default)
         {
             var account = await _accountRepository.FindByIdAsync(id, cancellationToken);
 
@@ -50,7 +51,20 @@ namespace smartfinance.Application.Apps
             return OperationResult<bool>.Succeeded();
         }
 
-        public async Task<OperationResult<int>> CreateAsync(AccountCreateViewModel model, CancellationToken cancellationToken)
+        public async Task<OperationResult<bool>> ConfirmEmailAsync(ConfirmEmailViewModel model)
+        {
+            var identityResult = await _identityUserService.ConfirmEmail(model);
+
+            if (!identityResult.Success)
+            {
+                return OperationResult<bool>
+                     .Failed(identityResult.Errors, identityResult.Message);
+            }
+
+            return OperationResult<bool>.Succeeded();
+        }
+
+        public async Task<OperationResult<int>> CreateAsync(AccountCreateViewModel model, CancellationToken cancellationToken = default)
         {
             var account = _mapper.Map<Account>(model);
 
@@ -77,7 +91,7 @@ namespace smartfinance.Application.Apps
             return OperationResult<int>.Succeeded(account.Id);
         }
 
-        public async Task<OperationResult<bool>> DeleteAsync(int id, CancellationToken cancellationToken)
+        public async Task<OperationResult<bool>> DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
             var account = await _accountRepository.FindByIdAsync(id, cancellationToken);
 
@@ -101,7 +115,7 @@ namespace smartfinance.Application.Apps
             return OperationResult<bool>.Succeeded();
         }
 
-        public async Task<OperationResult<AccountViewModel>> FindByIdAsync(int id, CancellationToken cancellationToken)
+        public async Task<OperationResult<AccountViewModel>> FindByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             var account = await _accountRepository.FindByIdAsync(id, cancellationToken);
 
@@ -110,7 +124,20 @@ namespace smartfinance.Application.Apps
             return OperationResult<AccountViewModel>.Succeeded(viewModel);
         }
 
-        public async Task<OperationResult<bool>> UpdateAsync(AccountUpdateViewModel model, CancellationToken cancellationToken)
+        public async Task<OperationResult<IdentityUserViewModel>> Login(LoginViewModel model)
+        {
+            var identityResult = await _identityUserService.Login(model);
+          
+            if (!identityResult.Success)
+            {
+                return OperationResult<IdentityUserViewModel>
+                     .Failed(identityResult.Errors, identityResult.Message);
+            }
+
+            return OperationResult<IdentityUserViewModel>.Succeeded(identityResult.PayLoad);
+        }
+
+        public async Task<OperationResult<bool>> UpdateAsync(AccountUpdateViewModel model, CancellationToken cancellationToken = default)
         {
             var account = await _accountRepository.FindByIdAsync(model.Id, cancellationToken);
 

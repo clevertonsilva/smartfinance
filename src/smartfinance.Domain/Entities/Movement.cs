@@ -1,36 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using smartfinance.Domain.Entities.Shared;
+using smartfinance.Domain.Enums;
 
 namespace smartfinance.Domain.Entities
 {
-    public enum MovementCategory
+    public class Movement : EntityBase
     {
-        Bill,
-    };
-
-    public enum MovementType
-    {
-        Credit,
-        Debit
-    };
-    public struct Movement
-    {
-        public int Ammount { get; set; }
+        public int AccountId { get; set; }
+        public Account Account { get; set; }
+        public decimal Amount { get; set; }
         public string Description { get; set; }
-        public MovementCategory Category { get; set; }
+        public DateTime? MovementDate { get; set; }
         public MovementType Type { get; set; }
-        public DateTime Date { get; set; }
+        public int CategoryId { get; set; }
+        public Category Category { get; set; }
+        public int TransactionTypeId { get; set; }
+        public TransactionType TransactionType { get; set; }
 
-        public Movement(int Ammount, string Description, MovementCategory Category, MovementType Type, DateTime Date)
+        private void AccountMovement(int amount, string description, MovementType type, int categoryId, int transactionTypeId, DateTime? movementDate)
         {
-            this.Type = Type;
-            this.Ammount = Ammount;
-            this.Description = Description;
-            this.Category = Category;
-            this.Date = Date;
+            Amount = amount;
+            Description = description;
+            Type = type;
+            CategoryId = categoryId;
+            TransactionTypeId = transactionTypeId;
+            MovementDate = movementDate;
+        }
+
+        public void Credit(int amount, string description, int categoryId, int transactionTypeId, DateTime? movementDate)
+        {
+            this.AccountMovement(amount, description, MovementType.Credit, categoryId, transactionTypeId, movementDate);
+        }
+
+        public void Debit(int amount, string description, int categoryId, int transactionTypeId, DateTime? movementDate)
+        {
+            this.AccountMovement(amount * -1, description, MovementType.Debit, categoryId, transactionTypeId, movementDate);
         }
     }
 }
