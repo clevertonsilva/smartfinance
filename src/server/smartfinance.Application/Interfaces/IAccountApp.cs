@@ -18,9 +18,5 @@ namespace smartfinance.Application.Interfaces
 
         Task<OperationResult<bool>> ActiveAsync(int id, CancellationToken cancellationToken = default);
 
-        //Task<OperationResult<IdentityUserViewModel>> Login(LoginViewModel model);
-
-        //Task<OperationResult<bool>> ConfirmEmailAsync(ConfirmEmailViewModel model);
-
     }
 }

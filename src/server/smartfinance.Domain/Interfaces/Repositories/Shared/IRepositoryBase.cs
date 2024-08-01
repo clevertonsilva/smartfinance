@@ -14,7 +14,7 @@ namespace smartfinance.Domain.Interfaces.Repositories.Shared
 
         Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken);
 
-        Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken);
+        Task<TEntity> UpdateAsync(TEntity entity);
 
         Task<TEntity> DeleteAsync(TEntity entity);
     }

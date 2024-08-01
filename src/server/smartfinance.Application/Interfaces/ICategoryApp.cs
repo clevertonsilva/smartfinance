@@ -1,12 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using smartfinance.Domain.Common;
+using smartfinance.Domain.Models.AccountMovementCategory.Create;
+using smartfinance.Domain.Models.AccountMovementCategory.Model;
+using smartfinance.Domain.Models.AccountMovementCategory.Update;
 
 namespace smartfinance.Application.Interfaces
 {
     public interface ICategoryApp
     {
+        Task<OperationResult<CategoryViewModel>> FindByIdAsync(int id, CancellationToken cancellationToken = default);
+
+        Task<OperationResult<IEnumerable<CategoryViewModel>>> FindAllAsync(CancellationToken cancellationToken = default);
+
+        Task<OperationResult<int>> CreateAsync(CategoryCreateViewModel model, CancellationToken cancellationToken = default);
+
+        Task<OperationResult<bool>> UpdateAsync(CategoryUpdateViewModel model, CancellationToken cancellationToken = default);
+
+        Task<OperationResult<bool>> DeleteAsync(int id, CancellationToken cancellationToken = default);
     }
 }

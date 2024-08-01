@@ -1,10 +1,8 @@
-﻿using smartfinance.Domain.Models.Authentication.Model;
-
-namespace smartfinance.Domain.Common
+﻿namespace smartfinance.Domain.Common
 {
     public class OperationResult<T>
     {
-        public T PayLoad { get; set; }
+        public T Model { get; set; }
 
         public bool Success { get; set; } = false;
 
@@ -15,13 +13,13 @@ namespace smartfinance.Domain.Common
         public static OperationResult<T> Succeeded() => new()
         {
             Success = true,
-            PayLoad = default,
+            Model = default,
         };
 
         public static OperationResult<T> Succeeded(T payLoad) => new()
         {
             Success = true,
-            PayLoad = payLoad,
+            Model = payLoad,
         };
 
         public static OperationResult<T> Failed(IEnumerable<Error> errors, string? message = null)

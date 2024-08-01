@@ -32,7 +32,8 @@ namespace smartfinance.Infra.Data.Migrations
 
                     b.Property<string>("CellPhone")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
@@ -43,17 +44,23 @@ namespace smartfinance.Infra.Data.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(350)
+                        .HasColumnType("varchar(350)");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("tinyint(1)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(450)
+                        .HasColumnType("varchar(450)");
 
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime(6)");
@@ -64,7 +71,8 @@ namespace smartfinance.Infra.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(450)
+                        .HasColumnType("varchar(450)");
 
                     b.HasKey("Id");
 
@@ -95,10 +103,13 @@ namespace smartfinance.Infra.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(450)
+                        .HasColumnType("varchar(450)");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(1)
+                        .HasColumnType("varchar(1)");
 
                     b.HasKey("Id");
 
@@ -117,7 +128,7 @@ namespace smartfinance.Infra.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(65,30)");
+                        .HasColumnType("decimal(13, 2)");
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
@@ -131,7 +142,7 @@ namespace smartfinance.Infra.Data.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("text");
 
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime(6)");
@@ -143,11 +154,10 @@ namespace smartfinance.Infra.Data.Migrations
                     b.Property<DateTime?>("MovementDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("TransactionTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(1)
+                        .HasColumnType("varchar(1)");
 
                     b.HasKey("Id");
 
@@ -156,41 +166,7 @@ namespace smartfinance.Infra.Data.Migrations
                     b.HasIndex("CategoryId")
                         .IsUnique();
 
-                    b.HasIndex("TransactionTypeId")
-                        .IsUnique();
-
                     b.ToTable("Movements");
-                });
-
-            modelBuilder.Entity("smartfinance.Domain.Entities.TransactionType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime?>("ModifiedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("ModifiedBy")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TransactionTypes");
                 });
 
             modelBuilder.Entity("smartfinance.Domain.Entities.Movement", b =>
@@ -207,17 +183,9 @@ namespace smartfinance.Infra.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("smartfinance.Domain.Entities.TransactionType", "TransactionType")
-                        .WithOne("Movement")
-                        .HasForeignKey("smartfinance.Domain.Entities.Movement", "TransactionTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Account");
 
                     b.Navigation("Category");
-
-                    b.Navigation("TransactionType");
                 });
 
             modelBuilder.Entity("smartfinance.Domain.Entities.Account", b =>
@@ -226,12 +194,6 @@ namespace smartfinance.Infra.Data.Migrations
                 });
 
             modelBuilder.Entity("smartfinance.Domain.Entities.Category", b =>
-                {
-                    b.Navigation("Movement")
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("smartfinance.Domain.Entities.TransactionType", b =>
                 {
                     b.Navigation("Movement")
                         .IsRequired();

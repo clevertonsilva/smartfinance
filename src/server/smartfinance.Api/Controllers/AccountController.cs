@@ -5,6 +5,7 @@ using smartfinance.Domain.Common;
 using smartfinance.Domain.Interfaces.Services.Authentication;
 using smartfinance.Domain.Models.Account.Create;
 using smartfinance.Domain.Models.Account.Model;
+using smartfinance.Domain.Models.Account.Update;
 using smartfinance.Domain.Models.Authentication.Model;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
@@ -32,13 +33,13 @@ namespace smartfinance.Api.Controllers
         {
             var result = await _accountApp.FindByIdAsync(id, cancellationToken);
 
-            if (result?.PayLoad == null)
+            if (result == null)
                 return NotFound();
 
             return Ok(result);
         }
 
-        [HttpPost("create")]
+        [HttpPost]
         [ProducesResponseType(typeof(OperationResult<int>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(OperationResult<int>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(OperationResult<int>), StatusCodes.Status422UnprocessableEntity)]
@@ -50,7 +51,39 @@ namespace smartfinance.Api.Controllers
             if (!result.Success)
                 return this.UnprocessableEntity(result);
 
-            return CreatedAtAction(nameof(FindByIdAsync), new { id = result.PayLoad }, result.PayLoad);
+            return CreatedAtAction(nameof(FindByIdAsync), new { id = result.Model }, result.Model);
+        }
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(typeof(OperationResult<int>), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(OperationResult<int>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(OperationResult<int>), StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(typeof(OperationResult<int>), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<OperationResult<int>>> PutAccount([Required] int id,
+                                                                         [Required] AccountUpdateViewModel model,
+                                                                         CancellationToken cancellationToken = default)
+        {
+            var result = await _accountApp.UpdateAsync(model, cancellationToken);
+
+            if (!result.Success)
+                return this.UnprocessableEntity(result);
+
+            return Ok(result);
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(OperationResult<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(OperationResult<bool>), StatusCodes.Status400BadRequest)]  
+        [ProducesResponseType(typeof(OperationResult<bool>), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<OperationResult<bool>>> DeleteAccount([Required] int id,
+                                                                         CancellationToken cancellationToken = default)
+        {
+            var result = await _accountApp.DeleteAsync(id, cancellationToken);
+
+            if (!result.Success)
+                return this.UnprocessableEntity(result);
+
+            return Ok(result);
         }
 
         [ProducesResponseType(typeof(OperationResult<IdentityUserViewModel>), StatusCodes.Status200OK)]

@@ -28,7 +28,7 @@ namespace smartfinance.Infra.Data.Repositories.Shared
 
         public async Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
-            await _dbSet.AddAsync(entity);
+            await _dbSet.AddAsync(entity, cancellationToken);
 
             return entity;
         }
@@ -38,10 +38,10 @@ namespace smartfinance.Infra.Data.Repositories.Shared
             return await _dbSet.FindAsync(id, cancellationToken);
         }
 
-        public async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
+        public async Task<TEntity> UpdateAsync(TEntity entity)
         {
             _dbSet.Update(entity);
-
+            
             return await Task.FromResult(entity);
         }
 

@@ -13,27 +13,23 @@ namespace smartfinance.Domain.Entities
         public MovementType Type { get; set; }
         public int CategoryId { get; set; }
         public Category Category { get; set; }
-        public int TransactionTypeId { get; set; }
-        public TransactionType TransactionType { get; set; }
 
-        private void AccountMovement(int amount, string description, MovementType type, int categoryId, int transactionTypeId, DateTime? movementDate)
+        private void AccountMovement(int amount, string description, int categoryId, MovementType type, DateTime? movementDate)
         {
             Amount = amount;
             Description = description;
-            Type = type;
             CategoryId = categoryId;
-            TransactionTypeId = transactionTypeId;
             MovementDate = movementDate;
         }
 
-        public void Credit(int amount, string description, int categoryId, int transactionTypeId, DateTime? movementDate)
+        public void Credit(int amount, string description, int categoryId, DateTime? movementDate)
         {
-            this.AccountMovement(amount, description, MovementType.Credit, categoryId, transactionTypeId, movementDate);
+            this.AccountMovement(amount, description, categoryId, MovementType.Credit, movementDate);
         }
 
-        public void Debit(int amount, string description, int categoryId, int transactionTypeId, DateTime? movementDate)
+        public void Debit(int amount, string description, int categoryId, DateTime? movementDate)
         {
-            this.AccountMovement(amount * -1, description, MovementType.Debit, categoryId, transactionTypeId, movementDate);
+            this.AccountMovement(amount * -1, description, categoryId, MovementType.Debit, movementDate);
         }
     }
 }

@@ -45,7 +45,7 @@ namespace smartfinance.Application.Apps
 
             account.IsActive = true;
 
-            await _accountRepository.UpdateAsync(account, cancellationToken);
+            await _accountRepository.UpdateAsync(account);
             await _accountRepository.UnitOfWork.Commit();
 
             return OperationResult<bool>.Succeeded();
@@ -109,7 +109,7 @@ namespace smartfinance.Application.Apps
 
             account.IsDeleted = true;
 
-            await _accountRepository.UpdateAsync(account, cancellationToken);
+            await _accountRepository.UpdateAsync(account);
             await _accountRepository.UnitOfWork.Commit();
 
             return OperationResult<bool>.Succeeded();
@@ -118,6 +118,11 @@ namespace smartfinance.Application.Apps
         public async Task<OperationResult<AccountViewModel>> FindByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             var account = await _accountRepository.FindByIdAsync(id, cancellationToken);
+
+            if (account == null)
+            {
+                return null;
+            }
 
             var viewModel = _mapper.Map<AccountViewModel>(account);
 
@@ -134,7 +139,7 @@ namespace smartfinance.Application.Apps
                      .Failed(identityResult.Errors, identityResult.Message);
             }
 
-            return OperationResult<IdentityUserViewModel>.Succeeded(identityResult.PayLoad);
+            return OperationResult<IdentityUserViewModel>.Succeeded(identityResult.Model);
         }
 
         public async Task<OperationResult<bool>> UpdateAsync(AccountUpdateViewModel model, CancellationToken cancellationToken = default)
@@ -157,7 +162,7 @@ namespace smartfinance.Application.Apps
 
             account.IsDeleted = true;
 
-            await _accountRepository.UpdateAsync(account, cancellationToken);
+            await _accountRepository.UpdateAsync(account);
             await _accountRepository.UnitOfWork.Commit();
 
             return OperationResult<bool>.Succeeded();
