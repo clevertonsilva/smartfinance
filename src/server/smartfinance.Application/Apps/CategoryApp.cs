@@ -5,6 +5,7 @@ using smartfinance.Domain.Common;
 using smartfinance.Domain.Common.Extensions;
 using smartfinance.Domain.Entities;
 using smartfinance.Domain.Interfaces.Repositories;
+using smartfinance.Domain.Interfaces.Services.Authentication;
 using smartfinance.Domain.Models.AccountMovementCategory.Create;
 using smartfinance.Domain.Models.AccountMovementCategory.Model;
 using smartfinance.Domain.Models.AccountMovementCategory.Update;
@@ -16,6 +17,16 @@ namespace smartfinance.Application.Apps
         private readonly ICategoryRepository _categoryRepository;
         private readonly IValidator<Category> _categoryValidator;
         private readonly IMapper _mapper;
+
+        public CategoryApp(ICategoryRepository categoryRepository,
+            IValidator<Category> categoryValidator,
+            IMapper mapper
+            )
+        {
+            _categoryRepository = categoryRepository;
+            _categoryValidator = categoryValidator;
+            _mapper = mapper;
+        }
 
         public async Task<OperationResult<int>> CreateAsync(CategoryCreateViewModel model, CancellationToken cancellationToken = default)
         {
@@ -42,14 +53,7 @@ namespace smartfinance.Application.Apps
             {
                 return null;
             }
-
-            var result = await _categoryValidator.ValidateAsync(category, cancellationToken);
-
-            if (!result.IsValid)
-            {
-                return OperationResult<bool>.Failed(result.AsReponseErrors());
-            }
-   
+  
             await _categoryRepository.DeleteAsync(category);
             await _categoryRepository.UnitOfWork.Commit();
 

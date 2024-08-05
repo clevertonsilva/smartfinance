@@ -15,6 +15,14 @@ namespace smartfinance.Domain.Validators
                 .NotEmpty()
                 .WithErrorCode("CATEGORY-001")
                 .WithMessage("O nome deve ser informado.")
+                .WithSeverity(Severity.Error)
+                .MustAsync(async (model, name, cancellation) =>
+                {
+                    bool exists = await _categoryRepository.NameExists(model.Id, name);
+                    return !exists;
+                })
+                .WithErrorCode("CATEGORY-002")
+                .WithMessage("Nome informado já se encontra cadastrado em nossa base de dados.")
                 .WithSeverity(Severity.Error);
         }
     }

@@ -23,6 +23,8 @@ namespace smartfinance.Infra.Data
 
             services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
             services.AddScoped(typeof(IAccountRepository), typeof(AccountRepository));
+            services.AddScoped(typeof(ICategoryRepository), typeof(CategoryRepository));
+            services.AddScoped(typeof(IMovementRepository), typeof(MovementRepository));
         }
     }
 }

@@ -1,4 +1,3 @@
-using smartfinance.Api;
 using smartfinance.Api.Extensions;
 using smartfinance.Api.Middleware;
 using smartfinance.Application;
@@ -16,8 +15,6 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSwaggerConfiguration();
-
-builder.Services.AddApi();
 builder.Services.AddApplication();
 builder.Services.AddDomain();
 builder.Services.AddInfraIdentity(builder.Configuration);
@@ -39,7 +36,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.UseExceptionHandler();
-
-//app.UseMiddleware(typeof(GlobalExceptionHandler));
 
 app.Run();

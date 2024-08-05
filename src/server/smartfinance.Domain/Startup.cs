@@ -13,6 +13,7 @@ namespace smartfinance.Domain
             #region Validators
 
             services.AddScoped<IValidator<Account>, AccountValidator>();
+            services.AddScoped<IValidator<Category>, CategoryValidator>();
 
             #endregion
 

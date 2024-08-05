@@ -32,6 +32,7 @@ namespace smartfinance.Domain.Validators
                     bool exists = await _accountRepository.EmailExistsAsync(model.Id, email);
                     return !exists;
                 })
+                .WithErrorCode("ACCOUNT-004")
                 .WithMessage("Email informado já se encontra cadastrado em nossa base de dados.")
                 .WithSeverity(Severity.Error);
         }

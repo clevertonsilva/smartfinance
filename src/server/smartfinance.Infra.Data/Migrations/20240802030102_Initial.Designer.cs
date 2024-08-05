@@ -12,7 +12,7 @@ using smartfinance.Infra.Data.Data;
 namespace smartfinance.Infra.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240801125241_Initial")]
+    [Migration("20240802030102_Initial")]
     partial class Initial
     {
         /// <inheritdoc />

@@ -3,7 +3,6 @@ using smartfinance.Domain.Entities;
 using smartfinance.Domain.Entities.Shared;
 using smartfinance.Domain.Interfaces.Services.Authentication;
 using smartfinance.Domain.Interfaces.Utils;
-using smartfinance.Infra.Data.Data.Configuration;
 
 namespace smartfinance.Infra.Data.Data
 {
@@ -19,11 +18,8 @@ namespace smartfinance.Infra.Data.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
             base.OnModelCreating(modelBuilder);
-            
-            modelBuilder.ApplyConfiguration(new AccountConfiguration());
-            modelBuilder.ApplyConfiguration(new CategoryConfiguration());
-            modelBuilder.ApplyConfiguration(new MovementConfiguration());
         }
 
         public async Task<bool> Commit(CancellationToken cancellationToken = default)

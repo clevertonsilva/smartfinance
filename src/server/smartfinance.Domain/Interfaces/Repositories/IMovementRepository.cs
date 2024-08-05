@@ -7,6 +7,6 @@ namespace smartfinance.Domain.Interfaces.Repositories
 {
     public interface IMovementRepository : IRepositoryBase<Movement>
     {
-        Task<OperationResult<IEnumerable<MovementViewModel>>> FindByRangeAsync(string initialDate, string finalDate, CancellationToken cancellationToken = default);
+        Task<IEnumerable<Movement>> FindByRangeAsync(string initialDate, string finalDate, int skip, int take, CancellationToken cancellationToken = default);
     }
 }
