@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace smartfinance.Infra.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class Inital : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -77,7 +77,7 @@ namespace smartfinance.Infra.Data.Migrations
                     Amount = table.Column<decimal>(type: "decimal(13,2)", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    MovementDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    MovementDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Type = table.Column<string>(type: "varchar(1)", maxLength: 1, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CategoryId = table.Column<int>(type: "int", nullable: false),

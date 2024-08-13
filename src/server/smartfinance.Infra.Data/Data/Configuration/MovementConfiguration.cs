@@ -18,6 +18,9 @@ namespace smartfinance.Infra.Data.Data.Configuration
                .HasColumnType("text")
                .IsRequired();
 
+            builder.Property(p => p.MovementDate)
+               .IsRequired();
+
             builder.HasOne(p => p.Account)
                 .WithMany(m => m.Movements)
                 .HasForeignKey(p => p.AccountId)

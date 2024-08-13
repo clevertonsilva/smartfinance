@@ -8,5 +8,6 @@ namespace smartfinance.Domain.Models.AccountMovement.Model
 {
     public class MovementViewModel
     {
+
     }
 }

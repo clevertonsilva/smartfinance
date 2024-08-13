@@ -12,15 +12,15 @@ using smartfinance.Infra.Data.Data;
 namespace smartfinance.Infra.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240802030102_Initial")]
-    partial class Initial
+    [Migration("20240809123036_Inital")]
+    partial class Inital
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.6")
+                .HasAnnotation("ProductVersion", "8.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
@@ -154,7 +154,7 @@ namespace smartfinance.Infra.Data.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<DateTime?>("MovementDate")
+                    b.Property<DateTime>("MovementDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Type")

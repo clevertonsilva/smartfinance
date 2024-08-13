@@ -5,7 +5,7 @@ using Serilog;
 using smartfinance.Domain.Common;
 using System.Net;
 
-namespace smartfinance.Api.Middleware
+namespace smartfinance.Api.Handlers
 {
     public class GlobalExceptionHandler : IExceptionHandler
     {

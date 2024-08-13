@@ -2,6 +2,7 @@
 using smartfinance.Domain.Models.AccountMovementCategory.Create;
 using smartfinance.Domain.Models.AccountMovementCategory.Model;
 using smartfinance.Domain.Models.AccountMovementCategory.Update;
+using smartfinance.Domain.Models.Shared;
 
 namespace smartfinance.Application.Interfaces
 {
@@ -9,7 +10,7 @@ namespace smartfinance.Application.Interfaces
     {
         Task<OperationResult<CategoryViewModel>> FindByIdAsync(int id, CancellationToken cancellationToken = default);
 
-        Task<OperationResult<IEnumerable<CategoryViewModel>>> FindAllAsync(CancellationToken cancellationToken = default);
+        Task<OperationResult<PagedListViewModel<CategoryViewModel>>> FindAllAsync(int accountId, string? searchNameTerm, string? sortOrder, int page, int pageSize, CancellationToken cancellationToken = default);
 
         Task<OperationResult<int>> CreateAsync(CategoryCreateViewModel model, CancellationToken cancellationToken = default);
 

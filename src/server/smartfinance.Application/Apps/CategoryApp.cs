@@ -5,10 +5,10 @@ using smartfinance.Domain.Common;
 using smartfinance.Domain.Common.Extensions;
 using smartfinance.Domain.Entities;
 using smartfinance.Domain.Interfaces.Repositories;
-using smartfinance.Domain.Interfaces.Services.Authentication;
 using smartfinance.Domain.Models.AccountMovementCategory.Create;
 using smartfinance.Domain.Models.AccountMovementCategory.Model;
 using smartfinance.Domain.Models.AccountMovementCategory.Update;
+using smartfinance.Domain.Models.Shared;
 
 namespace smartfinance.Application.Apps
 {
@@ -45,7 +45,7 @@ namespace smartfinance.Application.Apps
             return OperationResult<int>.Succeeded(category.Id);
         }
 
-        public async Task<OperationResult<bool>> DeleteAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<OperationResult<bool>?> DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
             var category = await _categoryRepository.FindByIdAsync(id, cancellationToken);
 
@@ -60,22 +60,24 @@ namespace smartfinance.Application.Apps
             return OperationResult<bool>.Succeeded();
         }
 
-        public async Task<OperationResult<IEnumerable<CategoryViewModel>>> FindAllAsync(CancellationToken cancellationToken = default)
+        public async Task<OperationResult<PagedListViewModel<CategoryViewModel>>> FindAllAsync(int accountId, string? searchNameTerm, string? sortOrder, int page, int pageSize, CancellationToken cancellationToken = default)
         {
-            var categories = await _categoryRepository.FindAllAsync(cancellationToken);
+            var categories = await _categoryRepository.FindAllAsync(searchNameTerm, sortOrder, page, pageSize, cancellationToken);
+
+            var model = new PagedListViewModel<CategoryViewModel>();
 
             if (!categories.Any())
             {
-                return null;
+                OperationResult<PagedListViewModel<CategoryViewModel>>.Succeeded(model);
             }
 
-            var viewModels = _mapper.Map<IEnumerable<CategoryViewModel>>(categories);
+            model = new PagedListViewModel<CategoryViewModel>(_mapper.Map<List<CategoryViewModel>>(categories), page, pageSize, categories.Count());
 
-            return OperationResult<IEnumerable<CategoryViewModel>>.Succeeded(viewModels);
+            return OperationResult<PagedListViewModel<CategoryViewModel>>.Succeeded(model);
 
         }
 
-        public async Task<OperationResult<CategoryViewModel>> FindByIdAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<OperationResult<CategoryViewModel>?> FindByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             var category = await _categoryRepository.FindByIdAsync(id, cancellationToken);
 
@@ -89,7 +91,7 @@ namespace smartfinance.Application.Apps
             return OperationResult<CategoryViewModel>.Succeeded(viewModel);
         }
 
-        public async Task<OperationResult<bool>> UpdateAsync(CategoryUpdateViewModel model, CancellationToken cancellationToken = default)
+        public async Task<OperationResult<bool>?> UpdateAsync(CategoryUpdateViewModel model, CancellationToken cancellationToken = default)
         {
             var account = await _categoryRepository.FindByIdAsync(model.Id, cancellationToken);
 

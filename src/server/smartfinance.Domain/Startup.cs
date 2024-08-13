@@ -14,12 +14,15 @@ namespace smartfinance.Domain
 
             services.AddScoped<IValidator<Account>, AccountValidator>();
             services.AddScoped<IValidator<Category>, CategoryValidator>();
+            services.AddScoped<IValidator<Movement>, MovementValidator>();
 
             #endregion
 
             #region AutoMappers
 
             services.AddAutoMapper(typeof(AccountMappingProfile));
+            services.AddAutoMapper(typeof(CategoryMappingProfile));
+            services.AddAutoMapper(typeof(MovementMappingProfile));
 
             #endregion
 

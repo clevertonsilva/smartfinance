@@ -23,9 +23,9 @@ namespace smartfinance.Api.Controllers
         [ProducesResponseType(typeof(OperationResult<CategoryViewModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(OperationResult<CategoryViewModel>), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<OperationResult<CategoryViewModel>>> FindAllAsync(CancellationToken cancellationToken = default)
+        public async Task<ActionResult<OperationResult<CategoryViewModel>>> FindAllAsync([FromQuery] int accountId, [FromQuery] string? searchNameTerm, [FromQuery]string? sortOrder, [FromQuery]int page, [FromQuery]int pageSize, CancellationToken cancellationToken = default)
         {
-            var result = await _categoryApp.FindAllAsync(cancellationToken);
+            var result = await _categoryApp.FindAllAsync(accountId, searchNameTerm, sortOrder, page, pageSize, cancellationToken);
 
             if (result == null)
                 return NotFound();
@@ -68,7 +68,7 @@ namespace smartfinance.Api.Controllers
         [ProducesResponseType(typeof(OperationResult<int>), StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(typeof(OperationResult<int>), StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<OperationResult<int>>> PutAccount([Required, FromRoute] int id,
-                                                                         [Required] CategoryUpdateViewModel model,
+                                                                         [Required, FromBody] CategoryUpdateViewModel model,
                                                                          CancellationToken cancellationToken = default)
         {
             var result = await _categoryApp.UpdateAsync(model, cancellationToken);

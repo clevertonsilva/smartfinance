@@ -9,7 +9,9 @@ namespace smartfinance.Domain.Mappings
     {
         public AccountMappingProfile()
         {
-            CreateMap<AccountCreateViewModel, Account>();
+            CreateMap<AccountCreateViewModel, Account>()
+                .ForMember(f => f.Movements, opt => opt.Ignore());
+
             CreateMap<AccountCreateViewModel, IdentityUserViewModel>();
                 
         }

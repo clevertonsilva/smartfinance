@@ -21,11 +21,6 @@ namespace smartfinance.Infra.Data.Repositories.Shared
 
         public IUnitOfWork UnitOfWork => _context;
 
-        public async Task<IEnumerable<TEntity>> FindAllAsync(CancellationToken cancellationToken = default) =>
-        await _dbSet
-            .AsNoTracking()
-            .ToListAsync(cancellationToken);
-
         public async Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
             await _dbSet.AddAsync(entity, cancellationToken);

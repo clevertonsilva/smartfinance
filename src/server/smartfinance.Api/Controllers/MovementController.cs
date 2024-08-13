@@ -1,12 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using smartfinance.Application.Apps;
+﻿using Microsoft.AspNetCore.Mvc;
 using smartfinance.Application.Interfaces;
 using smartfinance.Domain.Common;
 using smartfinance.Domain.Models.AccountMovement.Create;
 using smartfinance.Domain.Models.AccountMovement.Model;
-using smartfinance.Domain.Models.AccountMovementCategory.Create;
-using smartfinance.Domain.Models.AccountMovementCategory.Model;
 using System.ComponentModel.DataAnnotations;
 
 namespace smartfinance.Api.Controllers
@@ -26,7 +22,7 @@ namespace smartfinance.Api.Controllers
         [ProducesResponseType(typeof(OperationResult<MovementViewModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(OperationResult<MovementViewModel>), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<OperationResult<MovementViewModel>>> FindByIdAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<ActionResult<OperationResult<MovementViewModel>>> FindByIdAsync([Required] int id, CancellationToken cancellationToken = default)
         {
             var result = await _movementApp.FindByIdAsync(id, cancellationToken);
 
@@ -40,16 +36,11 @@ namespace smartfinance.Api.Controllers
         [ProducesResponseType(typeof(OperationResult<MovementViewModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(OperationResult<MovementViewModel>), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<OperationResult<MovementViewModel>>> FindByRangeAsync([FromQuery]string initialDate, [FromQuery]string finalDate, [FromQuery]int skip, [FromQuery]int take, CancellationToken cancellationToken = default)
+        public async Task<ActionResult<OperationResult<MovementViewModel>>> FindAllAsync([FromQuery]int accountId, [FromQuery] string searchDescriptionTerm, [FromQuery]string initialDate, [FromQuery]string finalDate, [FromQuery]int page, [FromQuery]int pageSize, CancellationToken cancellationToken = default)
         {
-            //var result = await _movementApp.FindByIdAsync(id, cancellationToken);
+            var result = await _movementApp.FindAllAsync(accountId, searchDescriptionTerm, initialDate, finalDate, page, pageSize, cancellationToken);
 
-            //if (result?.Model == null)
-            //    return NotFound();
-
-            //return Ok(result);
-
-            return null;
+            return Ok(result);
         }
 
         [HttpPost]
@@ -71,7 +62,7 @@ namespace smartfinance.Api.Controllers
         [ProducesResponseType(typeof(OperationResult<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(OperationResult<bool>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(OperationResult<bool>), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<OperationResult<bool>>> DeleteAccount([Required, FromRoute] int id,
+        public async Task<ActionResult<OperationResult<bool>>> DeleteAccount([Required] int id,
                                                                   CancellationToken cancellationToken = default)
         {
             var result = await _movementApp.DeleteAsync(id, cancellationToken);

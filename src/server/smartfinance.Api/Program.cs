@@ -1,10 +1,9 @@
 using smartfinance.Api.Extensions;
-using smartfinance.Api.Middleware;
+using smartfinance.Api.Handlers;
 using smartfinance.Application;
 using smartfinance.Domain;
 using smartfinance.Infra.Data;
 using smartfinance.Infra.Identity;
-
 
 var builder = WebApplication.CreateBuilder(args);
 

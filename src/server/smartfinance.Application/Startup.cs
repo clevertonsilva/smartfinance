@@ -11,6 +11,8 @@ namespace smartfinance.Application
             #region Aplication
 
             services.AddScoped<IAccountApp, AccountApp>();
+            services.AddScoped<ICategoryApp, CategoryApp>();
+            services.AddScoped<IMovementApp, MovementApp>();
 
             #endregion
         }
