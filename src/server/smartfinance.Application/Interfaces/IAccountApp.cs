@@ -2,7 +2,6 @@
 using smartfinance.Domain.Models.Account.Create;
 using smartfinance.Domain.Models.Account.Model;
 using smartfinance.Domain.Models.Account.Update;
-using smartfinance.Domain.Models.Authentication.Model;
 
 namespace smartfinance.Application.Interfaces
 {
@@ -12,7 +11,7 @@ namespace smartfinance.Application.Interfaces
 
         Task<OperationResult<int>> CreateAsync(AccountCreateViewModel model, CancellationToken cancellationToken = default);
 
-        Task<OperationResult<bool>> UpdateAsync(AccountUpdateViewModel model, CancellationToken cancellationToken = default);
+        Task<OperationResult<bool>> UpdateAsync(int id, AccountUpdateViewModel model, CancellationToken cancellationToken = default);
 
         Task<OperationResult<bool>> DeleteAsync(int id, CancellationToken cancellationToken = default);
 

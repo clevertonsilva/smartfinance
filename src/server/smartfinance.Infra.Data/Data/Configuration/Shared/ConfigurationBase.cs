@@ -12,17 +12,10 @@ namespace smartfinance.Infra.Data.Data.Configuration.Shared
 
             builder.HasKey(x => x.Id);
 
-            builder.Property(x => x.CreatedBy)
-                   .HasMaxLength(350)
-                    .IsRequired();
-
             builder.Property(x => x.CreatedAt)
                 .IsRequired();
 
             builder.Property(x => x.ModifiedAt);
-
-            builder.Property(x => x.ModifiedBy)
-                 .HasMaxLength(350);
         }
     }
 }

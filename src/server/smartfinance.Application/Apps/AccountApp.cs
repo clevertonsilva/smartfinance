@@ -75,6 +75,18 @@ namespace smartfinance.Application.Apps
                 return OperationResult<int>.Failed(validateResult.AsReponseErrors());
             }
 
+             var validateIdentityUserResult = await _identityUserService.ValidateUserAsync(_mapper.Map<AppIdentityUserViewModel>(model));
+
+            if (!validateIdentityUserResult.Success)
+            {
+                return OperationResult<int>
+                        .Failed(validateIdentityUserResult.Errors);
+            }
+
+            await _accountRepository.AddAsync(account, cancellationToken);
+           
+            await _accountRepository.UnitOfWork.Commit();
+
             var identityModel = _mapper.Map<CreateIdentityUserViewModel>(model);
 
             var identityResult = await _identityUserService.Register(identityModel);
@@ -82,11 +94,8 @@ namespace smartfinance.Application.Apps
             if (!identityResult.Success)
             {
                 return OperationResult<int>
-                     .Failed(identityResult.Errors, identityResult.Message);
+                        .Failed(identityResult.Errors, identityResult.Message);
             }
-
-            await _accountRepository.AddAsync(account, cancellationToken);
-            await _accountRepository.UnitOfWork.Commit();
 
             return OperationResult<int>.Succeeded(account.Id);
         }
@@ -142,9 +151,9 @@ namespace smartfinance.Application.Apps
             return OperationResult<IdentityUserViewModel>.Succeeded(identityResult.Model);
         }
 
-        public async Task<OperationResult<bool>> UpdateAsync(AccountUpdateViewModel model, CancellationToken cancellationToken = default)
+        public async Task<OperationResult<bool>> UpdateAsync(int id, AccountUpdateViewModel model, CancellationToken cancellationToken = default)
         {
-            var account = await _accountRepository.FindByIdAsync(model.Id, cancellationToken);
+            var account = await _accountRepository.FindByIdAsync(id, cancellationToken);
 
             if (account == null)
             {

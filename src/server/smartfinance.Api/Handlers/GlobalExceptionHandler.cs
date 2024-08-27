@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using Serilog;
-using smartfinance.Domain.Common;
-using System.Net;
 
 namespace smartfinance.Api.Handlers
 {

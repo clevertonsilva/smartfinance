@@ -13,7 +13,9 @@ namespace smartfinance.Domain.Mappings
                 .ForMember(f => f.Movements, opt => opt.Ignore());
 
             CreateMap<AccountCreateViewModel, IdentityUserViewModel>();
-                
+            CreateMap<AccountCreateViewModel, AppIdentityUserViewModel>()
+                .ForMember(f => f.Id, opt => opt.Ignore());
+
         }
     }
 }

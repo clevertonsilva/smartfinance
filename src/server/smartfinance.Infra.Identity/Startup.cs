@@ -2,8 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using smartfinance.Domain.Interfaces.Services.Authentication;
+using smartfinance.Infra.Identity.Customs;
 using smartfinance.Infra.Identity.Data;
 using smartfinance.Infra.Identity.Entities;
 using smartfinance.Infra.Identity.Localization;
@@ -22,14 +24,20 @@ namespace smartfinance.Infra.Identity
                 , ServerVersion.AutoDetect(_connectionString)
                     , o => o.SchemaBehavior(MySqlSchemaBehavior.Ignore)));
 
-            services.AddIdentity<AppIdentityUser, IdentityRole>()
-            .AddRoles<IdentityRole>()
-            .AddErrorDescriber<LocalizedIdentityErrorDescriber>()
-            .AddEntityFrameworkStores<AuthDbContext>()
-            .AddDefaultTokenProviders();
+            services.TryAddScoped<IUserValidator<AppIdentityUser>, UserValidator<AppIdentityUser>>();
 
-            services.AddScoped(typeof(ICurrentUserService), typeof(CurrentUserService));
-            services.AddScoped(typeof(IIdentityUserService), typeof(IdentityUserService));
+            services.AddIdentityApiEndpoints<AppIdentityUser>()
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<AuthDbContext>()
+                .AddErrorDescriber<LocalizedIdentityErrorDescriber>()
+                .AddDefaultTokenProviders();
+
+            services.Configure<EmailConfirmationTokenProviderOptions>(opt => 
+                opt.TokenLifespan = TimeSpan.FromMinutes(5));            
+
+            services.AddTransient<IEmailService, EmailService>();
+            services.AddScoped<IIdentityUserService, IdentityUserService>();
+            
         }
     }
 }

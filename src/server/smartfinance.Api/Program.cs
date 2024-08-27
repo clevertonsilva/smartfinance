@@ -16,6 +16,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSwaggerConfiguration();
 builder.Services.AddApplication();
 builder.Services.AddDomain();
+builder.Services.AddAuthentication(builder.Configuration);
 builder.Services.AddInfraIdentity(builder.Configuration);
 builder.Services.AddInfraData(builder.Configuration);
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
@@ -31,9 +32,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.UseExceptionHandler();
 
 app.Run();

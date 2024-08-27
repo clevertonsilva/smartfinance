@@ -6,5 +6,6 @@ namespace smartfinance.Domain.Interfaces.Repositories
     public interface IAccountRepository : IRepositoryBase<Account>
     {
         Task<bool> EmailExistsAsync(int id, string name);
+        Task<Account> FindByEmailAsync(string email);
     }
 }

@@ -91,9 +91,9 @@ namespace smartfinance.Application.Apps
             return OperationResult<CategoryViewModel>.Succeeded(viewModel);
         }
 
-        public async Task<OperationResult<bool>?> UpdateAsync(CategoryUpdateViewModel model, CancellationToken cancellationToken = default)
+        public async Task<OperationResult<bool>?> UpdateAsync(int id, CategoryUpdateViewModel model, CancellationToken cancellationToken = default)
         {
-            var account = await _categoryRepository.FindByIdAsync(model.Id, cancellationToken);
+            var account = await _categoryRepository.FindByIdAsync(id, cancellationToken);
 
             if (account == null)
             {

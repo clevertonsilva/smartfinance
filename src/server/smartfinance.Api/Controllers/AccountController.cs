@@ -26,6 +26,7 @@ namespace smartfinance.Api.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         [ProducesResponseType(typeof(OperationResult<AccountViewModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(OperationResult<AccountViewModel>), StatusCodes.Status404NotFound)]
@@ -55,6 +56,7 @@ namespace smartfinance.Api.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         [ProducesResponseType(typeof(OperationResult<int>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(OperationResult<int>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(OperationResult<int>), StatusCodes.Status422UnprocessableEntity)]
@@ -63,7 +65,7 @@ namespace smartfinance.Api.Controllers
                                                                          [Required] AccountUpdateViewModel model,
                                                                          CancellationToken cancellationToken = default)
         {
-            var result = await _accountApp.UpdateAsync(model, cancellationToken);
+            var result = await _accountApp.UpdateAsync(id, model, cancellationToken);
 
             if (!result.Success)
                 return this.UnprocessableEntity(result);
@@ -72,6 +74,7 @@ namespace smartfinance.Api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         [ProducesResponseType(typeof(OperationResult<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(OperationResult<bool>), StatusCodes.Status400BadRequest)]  
         [ProducesResponseType(typeof(OperationResult<bool>), StatusCodes.Status500InternalServerError)]
@@ -91,7 +94,7 @@ namespace smartfinance.Api.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         [HttpPost("login")]
-        public async Task<ActionResult<IdentityUserViewModel>> Login(LoginViewModel model)
+        public async Task<ActionResult<OperationResult<IdentityUserViewModel>>> Login(LoginViewModel model)
         {
             var result = await _identityUserService.Login(model);
             
@@ -101,13 +104,13 @@ namespace smartfinance.Api.Controllers
             return Ok(result);
         }
 
+        [Authorize]
         [ProducesResponseType(typeof(OperationResult<IdentityUserViewModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-        [Authorize]
         [HttpPost("refresh-login")]
-        public async Task<ActionResult<IdentityUserViewModel>> RefreshToken()
+        public async Task<ActionResult<OperationResult<IdentityUserViewModel>>> RefreshToken()
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var userId = identity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -123,18 +126,45 @@ namespace smartfinance.Api.Controllers
             return Ok(result);
         }
 
+        [Authorize]
         [ProducesResponseType(typeof(OperationResult<IdentityUserViewModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         [HttpPost("confirm-email")]
-        public async Task<ActionResult<bool>> ConfirmEmail(ConfirmEmailViewModel model)
+        public async Task<ActionResult<OperationResult<IdentityUserViewModel>>> ConfirmEmail(ConfirmEmailViewModel model)
         {
-            var confirmResult = await _identityUserService.ConfirmEmail(model);
+            var result = await _identityUserService.ConfirmEmail(model);
 
-            if (!confirmResult.Success)
-                return BadRequest(confirmResult);
+            if (!result.Success)
+                return BadRequest(result);
 
-            return Ok(confirmResult);
+            return Ok(result);
+        }
+
+        [ProducesResponseType(typeof(OperationResult<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [HttpPost("forgot-password")]
+        public async Task<ActionResult<OperationResult<string>>> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            var result = await _identityUserService.ForgotPassword(model);
+
+            if (!result.Success)
+                return BadRequest(result);
+
+            return Ok();
+        }
+
+        [ProducesResponseType(typeof(OperationResult<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [HttpPost("reset-password")]
+        public async Task<ActionResult<OperationResult<bool>>> ResetPassword(ResetPasswordViewModel model)
+        {
+            var result = await _identityUserService.ResetPassword(model);
+
+            if (!result.Success)
+                return BadRequest(result);
+
+            return Ok();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using smartfinance.Application.Interfaces;
 using smartfinance.Domain.Common;
 using smartfinance.Domain.Models.AccountMovementCategory.Create;
@@ -20,6 +21,7 @@ namespace smartfinance.Api.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [ProducesResponseType(typeof(OperationResult<CategoryViewModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(OperationResult<CategoryViewModel>), StatusCodes.Status404NotFound)]
@@ -34,6 +36,7 @@ namespace smartfinance.Api.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         [ProducesResponseType(typeof(OperationResult<CategoryViewModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(OperationResult<CategoryViewModel>), StatusCodes.Status404NotFound)]
@@ -48,6 +51,7 @@ namespace smartfinance.Api.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [ProducesResponseType(typeof(OperationResult<int>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(OperationResult<int>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(OperationResult<int>), StatusCodes.Status422UnprocessableEntity)]
@@ -63,6 +67,7 @@ namespace smartfinance.Api.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         [ProducesResponseType(typeof(OperationResult<int>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(OperationResult<int>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(OperationResult<int>), StatusCodes.Status422UnprocessableEntity)]
@@ -71,7 +76,7 @@ namespace smartfinance.Api.Controllers
                                                                          [Required, FromBody] CategoryUpdateViewModel model,
                                                                          CancellationToken cancellationToken = default)
         {
-            var result = await _categoryApp.UpdateAsync(model, cancellationToken);
+            var result = await _categoryApp.UpdateAsync(id, model, cancellationToken);
 
             if (!result.Success)
                 return this.UnprocessableEntity(result);
@@ -80,6 +85,7 @@ namespace smartfinance.Api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         [ProducesResponseType(typeof(OperationResult<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(OperationResult<bool>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(OperationResult<bool>), StatusCodes.Status500InternalServerError)]

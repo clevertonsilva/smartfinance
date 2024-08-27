@@ -15,6 +15,11 @@ namespace smartfinance.Infra.Data.Repositories
             _context = context;
         }
 
+        public async Task<Account> FindByEmailAsync(string email)
+        {
+            return await _context.Accounts.FirstOrDefaultAsync(f => f.Email == email);
+        }
+
         public async Task<bool> EmailExistsAsync(int id, string email)
         {
             return await _context.Accounts.AnyAsync(f => f.Id != id && f.Email.Contains(email));

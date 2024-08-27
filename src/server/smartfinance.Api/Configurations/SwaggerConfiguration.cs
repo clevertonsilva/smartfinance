@@ -2,9 +2,9 @@
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System.Reflection;
 
-namespace smartfinance.Api.Extensions
+namespace smartfinance.Api.Configurations
 {
-    public static class SwaggerExtension
+    public static class SwaggerConfiguration
     {
         private static readonly string version = "v1";
         private static readonly string title = "Smartfinance Api";

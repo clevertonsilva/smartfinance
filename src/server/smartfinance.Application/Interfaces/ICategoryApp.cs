@@ -14,7 +14,7 @@ namespace smartfinance.Application.Interfaces
 
         Task<OperationResult<int>> CreateAsync(CategoryCreateViewModel model, CancellationToken cancellationToken = default);
 
-        Task<OperationResult<bool>> UpdateAsync(CategoryUpdateViewModel model, CancellationToken cancellationToken = default);
+        Task<OperationResult<bool>> UpdateAsync(int id, CategoryUpdateViewModel model, CancellationToken cancellationToken = default);
 
         Task<OperationResult<bool>> DeleteAsync(int id, CancellationToken cancellationToken = default);
     }
