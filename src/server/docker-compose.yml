@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  # app:
+  #   image: myapp:latest
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "5000:8080"
+  #   depends_on:
+  #     - db
+  #   environment:
+  #     - ASPNETCORE_ENVIRONMENT=Development
+  #     - ConnectionStrings__DefaultConnection=Server=127.0.0.1;Database=smartfinance;User=root;Password=root;
+
+  db:
+    image: mysql:8
+    container_name: smartfinance_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: smartfinance
+    command: --sql_mode=""
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
